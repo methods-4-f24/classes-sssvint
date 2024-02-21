@@ -23,6 +23,7 @@ Below is code from Chapter 2 of the book that you can use to do the exercises. N
 
 # define grid
 p_grid = seq(from = 0, to = 1, length.out=20)
+p_grid
 
 # define prior
 prior = rep(1, 20)
@@ -49,56 +50,81 @@ mtext("20 points")
 
 2E1. 
 
-```{r}
-
-# Your answer here.
-
-```
+(2) Pr(rain|Monday)
 
 2E2.
 
-```{r}
-
-# Your answer here.
-
-```
+(3) The probability that it is Monday, given that it is raining.
 
 2E3.
 
-```{r}
-
-# Your answer here.
-
-```
+(1) Pr(Monday|rain)
 
 2E4.
 
-```{r}
-
-# Discuss in pairs/groups. Ask me for a hint if you feel like it.
-
-```
+The probability of water being 0.7 means that if you were to toss the globe e.g. 100 times, your finger would land on water roughly 70 times; but even if you throw it a different amt of times, you would still land on water roughly 70& of the time. One could also say a probability is a distribution of outcomes, with the mean being the "probability".
 
 ### Medium
 
 2M1.
+Recall the globe tossing model from the chapter. Compute and plot the grid approximate posterior distribution for each of the following sets of observations. In each case, assume a uniform prior for p. 
+(1) W, W, W 
+(2) W, W, W, L 
+(3) L, W, W, L, W, W, W
 
 ```{r}
+#define the grid
+p_grid = seq(from = 0, to = 1, length.out=20)
 
-# Write your code here.
+#define the prior
+prior <- rep(1,20) # if i multiply prior with likelihood, posterior stays the same; equal chance of any amount of success, i.e. equal chance of earth to be covered in any amount of water
 
+#compute likelihood (probability!) at each value in grid
+likelihood <- dbinom(3, size=3, prob=p_grid) # if i have 3 trials and 3 waters, whats the probability that earth is p_grid amount covered with water, p(b|a)? what is the probability of getting 3 out of 3 successful trials in total, given our probability of success is 0.7? how surprising is it (inversely)? prob=p_grid means probability for every value of p grid 
+
+#compute product of likelihood and prior
+unstd.posterior <- likelihood*prior
+
+#standardize posterior, so it sums to 1
+posterior <- unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "coverage of water", ylab = "posterior_probability")
+mtext("20 points")
+
+
+prior
+likelihood
 ```
 
 2M2.
 
 ```{r}
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+p_grid
 
-# In the book, McElreath says that we can do much better than choosing a uniform prior for estimating the coverage of water. Is this what we are doing here? How does that impact our estimation?
+# define prior
+prior = c(rep(0, 10),rep(1,10))
 
+# compute likelihood at each value in grid
+likelihood = dbinom(5, size = 7, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior # because you multiply 0 0 0 0 1 1 1 1 1 with the actual values, the 0 will be 0 but the 1 wont change!!!
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
 ```
 
 2M3.
-
+Suppose there are two globes, one for Earth and one for Mars. The Earth globe is 70% covered in water. The Mars globe is 100% land. Further suppose that one of these globes—you don’t know which—was tossed in the air and produced a “land” observation. Assume that each globe was equally likely to be tossed. Show that the posterior probability that the globe was the Earth, conditional on seeing “land” (Pr(Earth|land)), is 0.23.
 ```{r}
 
 # Use the Bayes formula!
